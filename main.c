@@ -21,7 +21,7 @@ static int board_nr;
 static int food_nr;
 static int festival_nr;
 
-static int player_nr;
+static int player_nr; // static 변수로 게임 보드, 카드구성 등 설정을 저장 
 
 
 
@@ -31,16 +31,16 @@ typedef struct player {
 		char name[MAX_CHARNAME];
 		int accumCredit;
 		int flag_graduate;
-} player_t;
+} player_t; //구조체로 플레이어의 정보(에너지, 위치, 이름, 학점)을 저장 
 
-static player_t *cur_player;
-//static player_t cur_player[MAX_PLAYER];
 
-#if 0
+static player_t cur_player[MAX_PLAYER];
+
+
 static int player_energy[MAX_PLAYER];
 static int player_position[MAX_PLAYER];
 static char player_name[MAX_PLAYER][MAX_CHARNAME];
-#endif
+//플레이어 인원 수만큼 상태 개수를 설정해줌 
 
 //function prototypes
 #if 0
