@@ -140,9 +140,15 @@ void actionNode(int player)
     {
         case SMMNODE_TYPE_LECTURE:
         	
-        	// 강의 수강 여부를 입력받기
-        	
-        	
+        	// 이전에 듣지 않음
+			// 충분한에너지(현재 에너지>강의에너지)
+        	if(cur_player[player].energy >= smmObj_getNodeEnergy(boardPtr))
+        	{
+        		printf("%s is too hungry to take the lecture\n", cur_player[player].name);
+        		break;
+			}
+        		
+        	// 강의를 수강했을 때, credit은 더하고 energy는 빼줌
             cur_player[player].accumCredit += smmObj_getNodeCredit( boardPtr );
             cur_player[player].energy -= smmObj_getNodeEnergy( boardPtr );
             
@@ -155,7 +161,7 @@ void actionNode(int player)
         case SMMNODE_TYPE_RESTAURANT:
         	// 플레이어 현재 에너지 += 보충 에너지
         	cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
-        	printf("");
+        	printf("Let's eat in %s and charge %i energies\n\n",smmObj_getNodename(boardPtr), smmObj_getNodeEnergy(boardPtr));
         	
         	break;
         
@@ -178,7 +184,7 @@ void actionNode(int player)
         case SMMNODE_TYPE_HOME:
         	// 지나가는 순간 현재 에너지 += 보충 에너지
         	cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
-        	printf("");
+        	printf("returned to HOME! energy charged by %i\n", smmObj_getNodeEnergy(boardPtr));
         	
         	break;
         	
@@ -191,14 +197,21 @@ void actionNode(int player)
         	// 음식카드 랜덤 선택, 현재 에너지 += 보충 에너지
 			foodPtr = smmdb_getData(LISTNO_FOODCARD, rand()%smmdblen(LISTNO_FOODCARD));
         	cur_player[player].energy += smmObj_getFoodCharge(foodPtr);
-        	printf("%s picks %s and charges %i\n\n", cur_player[player].name, );
+        	printf("%s picks %s and charges %i\n\n", cur_player[player].name, smmObj_getFoodname(foodPtr), smmObj_getFoodChage(foodPtr));
         	
         	break;
         
         case SMMNODE_TYPE_FESTIVAL:
         	// 축제카드 랜덤 선택, 미션 수행
         	festPtr = smmdb_getData(LISTNO_FESTCARD, rand()%smmdb_len(LISTNO_FESTCARD));
-        	printf("MISSION : %s\n\n", );
+        	printf("%s participates to Snow Festival! press any key to pick a festival card: ", cur_player[player].name);
+        	c=getchar();
+        	fflush(stdin);
+			printf("MISSION : %s\n\n", smmObj_getFestivalname(festPtr));
+			
+			printf("(Press any key when mission is ended.)");
+			c=getchar();
+			fflush(stdin);
         	
         	break;
             
