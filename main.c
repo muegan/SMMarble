@@ -59,8 +59,10 @@ int isGraduated(void) // 플레이어가 graduate 했는지 체크
 	int i;
 	for (i=0;i<player_nr;i++)// 플레이어 인원 수만큼 반복
 	{
-		
-	}
+		if (cur_player[i].accumCredit >= GRADUATE_CREDIT)
+			return 1; // 졸업 O
+	} 
+	return 0; // 졸업 X
 }
 
 

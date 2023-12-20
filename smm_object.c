@@ -31,7 +31,7 @@ char* smmObj_getTypeName(int type)
 
 
 
-//1. 구조체 형식 정의
+//구조체 형식 정의
 typedef struct smmObject {
        char name[MAX_CHARNAME];
        smmObjType_e objType; 
@@ -41,10 +41,11 @@ typedef struct smmObject {
        smmObjGrade_e grade;
 } smmObject_t;
 
+//구조체 변수 정의 
 static smmObject_t smm_node[MAX_NODE];
 static int smmObj_noNode = 0;
 
-//3. 관련 함수 변경 
+//관련 함수 변경 
 //object generation(parameter로 object를 생성) 
 void* smmObj_genObject(char* name, smmObjType_e objType, int type, int credit, int energy, smmObjGrade_e grade)
 {    
@@ -72,15 +73,21 @@ char* smmObj_getNodeName(void* obj) // object의 이름을 return
 
 int smmObj_getNodeType(int node_nr) // object의 type을 return 
 {
-    return smm_node[node_nr].type;
+	smmObject_t* ptr = (smmObject_t*)obj;
+	
+    return ptr->type;
 }
 
 int smmObj_getNodeCredit(int node_nr) // object의 credit울 return 
 {
-    return smm_node[node_nr].credit;
+	smmObject_t* ptr = (smmObject_t*)obj;
+	
+    return ptr->credit;
 }
 
 int smmObj_getNodeEnergy(int node_nr) // object의 energy를 return 
 {
-    return smm_node[node_nr].energy;
+	smmObject_t* ptr = (smmObject_t*)obj;
+	
+    return ptr->energy;
 }
