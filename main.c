@@ -141,8 +141,6 @@ void actionNode(int player)
         case SMMNODE_TYPE_LECTURE:
         	
         	// 강의 수강 여부를 입력받기
-        	if
-        	
         	
         	
             cur_player[player].accumCredit += smmObj_getNodeCredit( boardPtr );
@@ -168,8 +166,14 @@ void actionNode(int player)
         		
 			}
 			// 성공 -> 실험 종료, 실패 -> 실험 중 상태로 머무름
+			printf("Experiment result : %i, fail. %s needs more experiments...", ,
+			cur_player[player].name);
+			
+			printf("Experiment result : %i, success! %s can exit this lab!", ,
+			cur_player[player].name);
         	
         	break;
+        	
         	
         case SMMNODE_TYPE_HOME:
         	// 지나가는 순간 현재 에너지 += 보충 에너지
@@ -187,14 +191,14 @@ void actionNode(int player)
         	// 음식카드 랜덤 선택, 현재 에너지 += 보충 에너지
         	foodPtr = smmdb_getData(LISTNO_FOODCARD, rand()%smmdblen(LISTNO_FOODCARD));
         	cur_player[player].energy += smmObj_getFoodCharge(foodPtr);
-        	printf("");
+        	printf("%s picks %s and charges %i\n\n", cur_player[player].name, );
         	
         	break;
         
         case SMMNODE_TYPE_FESTIVAL:
         	// 축제카드 랜덤 선택, 미션 수행
         	festPtr = smmdb_getData(LISTNO_FESTCARD, rand()%smmdb_len(LISTNO_FESTCARD));
-        	printf("");
+        	printf("MISSION : %s\n\n", );
         	
         	break;
             
