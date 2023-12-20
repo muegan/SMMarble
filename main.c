@@ -33,8 +33,8 @@ typedef struct player {
 		int flag_graduate;
 } player_t; //구조체로 플레이어의 정보(에너지, 위치, 이름, 학점)을 저장 
 
-
-static player_t cur_player[MAX_PLAYER];
+static player_t *cur_player;
+//static player_t cur_player[MAX_PLAYER];
 
 
 static int player_energy[MAX_PLAYER];
@@ -45,7 +45,6 @@ static char player_name[MAX_PLAYER][MAX_CHARNAME];
 //function prototypes
 #if 0
 int isGraduated(void); //check if any player is graduated
-	//print grade history of the player
 void goForward(int player, int step); //make player go "step" steps on the board (check if player is graduated)
 void printPlayerStatus(void); //print all player status at the beginning of each turn
 float calcAverageGrade(int player); //calculate average grade of the player
@@ -54,8 +53,18 @@ void* findGrade(int player, char *lectureName); //find the grade from the player
 void printGrades(int player); //print all the grade history of the player
 #endif
 
+int isGraduated(void) // 플레이어가 graduate 했는지 체크
+{
+	int i;
+	for (i=0;i<player_nr;i++)// 플레이어 인원 수만큼 반복
+	{
+		
+	}
+}
 
-void printGrades(int player)
+
+
+void printGrades(int player) // 플레이어의 성적 이력을 출력 
 {
 	int i;
 	void *gradePtr;
@@ -64,9 +73,9 @@ void printGrades(int player)
 		gradePtr = smmdb_getData(LISTNO_OFFSET_GRADE + player, i);
 		printf("%s : %i\n", smmObj_getNodeName(gradePtr), smmObj_getNodeGrade(gradePtr));
 	}
-}
+} 
 
-void printPlayerStatus(void)
+void printPlayerStatus(void) // 턴 시작마다, 모든 플레이어의 상태 출력 
 {
 	int i;
 	
@@ -80,23 +89,21 @@ void printPlayerStatus(void)
      }
 }
 
-void generatePlayers(int n, int initEnergy) //generate a new player
+void generatePlayers(int n, int initEnergy) // 새 플레이어를 생성 
 {
      int i;
      //n time loop
      for (i=0;i<n;i++)
      {
          //input name
-         printf("Input player %i's name:", i); //¾E³≫ ¹®±¸ 
+         printf("Input player %i's name:", i);
          scanf("%s", cur_player[i].name);
          fflush(stdin);
          
          //set position
-         //player_position[i] = 0;
          cur_player[i].position = 0;
          
          //set energy
-         //player_energy[i] = initEnergy;
          cur_player[i].energy = initEnergy;
          cur_player[i].accumCredit = 0;
          cur_player[i].flag_graduate = 0;
@@ -104,7 +111,7 @@ void generatePlayers(int n, int initEnergy) //generate a new player
 }
 
 
-int rolldie(int player)
+int rolldie(int player) // 주사위를 굴림 
 {
     char c;
     printf(" Press any key to roll a die (press g to see grade): ");
@@ -113,10 +120,10 @@ int rolldie(int player)
     
 #if 0
     if (c == 'g')
-        printGrades(player);
+        printGrades(player); // 'g'를 입력한 경우 플레이어 성적을 출력 
 #endif
     
-    return (rand()%MAX_DIE + 1);
+    return (rand()%MAX_DIE + 1); // 1 ~ MAX_DIE 중 랜덤한 값을 return
 }
 
 //action code when a player stays at a node
@@ -147,7 +154,7 @@ void actionNode(int player)
     }
 }
 
-void goForward(int player, int step)
+void goForward(int player, int step) // 플레이어를 보드 위에서 이동(졸업 여부 체크) 
 {
      void *boardPtr;
      cur_player[player].position += step;
@@ -267,7 +274,7 @@ int main(int argc, const char * argv[]) {
     
     
     //3. SM Marble game starts ---------------------------------------------------------------------------------
-    while (1) //is anybody graduated?
+    while (isGraduated()==0) //is anybody graduated?
     {
         int die_result;
         
@@ -277,9 +284,11 @@ int main(int argc, const char * argv[]) {
         
         //4-2. die rolling (if not in experiment)
         die_result = rolldie(turn);
+        printf("die result : %i\n", die_result);
         
         //4-3. go forward
         goForward(turn, die_result);
+        printf("player position : %i\n", cur_player[turn].position);
 
 		//4-4. take action at the destination node of the board
         actionNode(turn);
