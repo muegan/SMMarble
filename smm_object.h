@@ -75,3 +75,4 @@ int smmObj_getNodeEnergy(void*);
 char* smmObj_getTypeName(int type);
 
 /* smm_object_h */
+#endif
