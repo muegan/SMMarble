@@ -194,19 +194,27 @@ void actionNode(int player)
         	break;
         	
         case SMMNODE_TYPE_FOODCHANCE:
-        	// 음식카드 랜덤 선택, 현재 에너지 += 보충 에너지
-			foodPtr = smmdb_getData(LISTNO_FOODCARD, rand()%smmdblen(LISTNO_FOODCARD));
+       	{
+		   // 음식카드 랜덤 선택, 현재 에너지 += 보충 에너지
+        	void* foodPtr;
+			foodPtr= smmdb_getData(LISTNO_FOODCARD, rand()%smmdblen(LISTNO_FOODCARD));
         	cur_player[player].energy += smmObj_getFoodCharge(foodPtr);
         	printf("%s picks %s and charges %i\n\n", cur_player[player].name, smmObj_getFoodname(foodPtr), smmObj_getFoodChage(foodPtr));
         	
         	break;
-        
+    	}
+    	
         case SMMNODE_TYPE_FESTIVAL:
+        {
         	// 축제카드 랜덤 선택, 미션 수행
+        	void* festPtr;
+        	char c;
+        	
         	festPtr = smmdb_getData(LISTNO_FESTCARD, rand()%smmdb_len(LISTNO_FESTCARD));
         	printf("%s participates to Snow Festival! press any key to pick a festival card: ", cur_player[player].name);
         	c=getchar();
         	fflush(stdin);
+        	
 			printf("MISSION : %s\n\n", smmObj_getFestivalname(festPtr));
 			
 			printf("(Press any key when mission is ended.)");
@@ -214,6 +222,7 @@ void actionNode(int player)
 			fflush(stdin);
         	
         	break;
+    	}
             
         default:
             break;
@@ -222,13 +231,13 @@ void actionNode(int player)
 
 void goForward(int player, int step) // 플레이어를 보드 위에서 이동(졸업 여부 체크) 
 {
-     void *boardPtr;
-     cur_player[player].position += step;
-     boardPtr = smmdb_getData(LISTNO_NODE, cur_player[player].position );
+    void *boardPtr;
+    cur_player[player].position += step;
+    boardPtr = smmdb_getData(LISTNO_NODE, cur_player[player].position );
      
-     printf("%s go to node %i (name: %s)\n", 
+    printf("%s go to node %i (name: %s)\n", 
                 cur_player[player].name, cur_player[player].position,
-                smmObj_getNodeName(boardPtr);
+                smmObj_getNodeName(boardPtr));
 }
 
 
@@ -295,7 +304,7 @@ int main(int argc, const char * argv[]) {
     }
     
     printf("\n\nReading food card component......\n");
-    while ((fscanf(fp, " %s %i", food, &energy))==2) //read a food parameter set
+    while ((fscanf(fp, " %s %i", name, &energy))==2) //read a food parameter set
     {
         //store the parameter set
     }
@@ -312,7 +321,7 @@ int main(int argc, const char * argv[]) {
     }
     
     printf("\n\nReading festival card component......\n");
-    while ((fscanf(fp, "%s", festival))==1) //read a festival card string
+    while ((fscanf(fp, "%s", name))==1) //read a festival card string
     {
         //store the parameter set
     }
