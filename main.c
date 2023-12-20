@@ -120,11 +120,10 @@ int rolldie(int player) // 주사위를 굴림
     printf(" Press any key to roll a die (press g to see grade): ");
     c = getchar();
     fflush(stdin);
-    
-#if 0
+
     if (c == 'g')
         printGrades(player); // 'g'를 입력한 경우 플레이어 성적을 출력 
-#endif
+
     
     return (rand()%MAX_DIE + 1); // 1 ~ MAX_DIE 중 랜덤한 값을 return
 }
@@ -133,7 +132,6 @@ int rolldie(int player) // 주사위를 굴림
 void actionNode(int player)
 {
 	void *boardPtr = smmdb_getData(LISTNO_NODE, cur_player[player].position );
-    //int type = smmObj_getNodeType( cur_player[player].position );
     int type = smmObj_getNodeType( boardPtr );
     char *name = smmObj_getNodeName( boardPtr );
     void *gradePtr;
@@ -149,7 +147,7 @@ void actionNode(int player)
             cur_player[player].energy -= smmObj_getNodeEnergy( boardPtr );
             
             //grade generation
-            gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit( boardPtr ), 0, ??);
+            gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit( boardPtr ), 0, );
             smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
             
             break;
@@ -191,7 +189,7 @@ void actionNode(int player)
         	
         case SMMNODE_TYPE_FOODCHANCE:
         	// 음식카드 랜덤 선택, 현재 에너지 += 보충 에너지
-        	foodPtr = smmdb_getData(LISTNO_FOODCARD, rand()%smmdblen(LISTNO_FOODCARD));
+			foodPtr = smmdb_getData(LISTNO_FOODCARD, rand()%smmdblen(LISTNO_FOODCARD));
         	cur_player[player].energy += smmObj_getFoodCharge(foodPtr);
         	printf("%s picks %s and charges %i\n\n", cur_player[player].name, );
         	
