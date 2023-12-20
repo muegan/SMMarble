@@ -44,11 +44,12 @@ static char player_name[MAX_PLAYER][MAX_CHARNAME];
 
 //function prototypes
 #if 0
-int isGraduated(void); //check if any player is graduated
-void goForward(int player, int step); //make player go "step" steps on the board (check if player is graduated)
-void printPlayerStatus(void); //print all player status at the beginning of each turn
-float calcAverageGrade(int player); //calculate average grade of the player
-smmGrade_e takeLecture(int player, char *lectureName, int credit); //take the lecture (insert a grade of the player)
+int isGraduated(void); //graduated 플레이어 있는지 확인
+void generatePlayers(int n, int initEnergy); // 새 플레이어 생성
+void goForward(int player, int step); // 플레이어가 보드 위에서 이동(check graduate)
+void printPlayerStatus(void); // 매 턴 시작마다 플레이어의 상태 출력
+float calcAverageGrade(int player); // 플레이어의 평균 성적 계산
+smmGrade_e takeLecture(int player, char *lectureName, int credit); // 강의 수강(insert a grade of the player)
 void* findGrade(int player, char *lectureName); //find the grade from the player's grade history
 void printGrades(int player); //print all the grade history of the player
 #endif
