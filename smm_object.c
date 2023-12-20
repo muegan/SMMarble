@@ -45,7 +45,7 @@ static smmObject_t smm_node[MAX_NODE];
 static int smmObj_noNode = 0;
 
 //3. 관련 함수 변경 
-//object generation
+//object generation(parameter로 object를 생성) 
 void* smmObj_genObject(char* name, smmObjType_e objType, int type, int credit, int energy, smmObjGrade_e grade)
 {    
     smmObject_t* ptr;
@@ -63,25 +63,24 @@ void* smmObj_genObject(char* name, smmObjType_e objType, int type, int credit, i
 }
 
 //3. 관련 함수 변경 
-char* smmObj_getNodeName(void* obj)
+char* smmObj_getNodeName(void* obj) // object의 이름을 return
 {
     smmObject_t* ptr = (smmObject_t*)obj;
     
     return ptr->name;
 }
 
-//3. 관련 함수 변경 
-int smmObj_getNodeType(int node_nr)
+int smmObj_getNodeType(int node_nr) // object의 type을 return 
 {
     return smm_node[node_nr].type;
 }
 
-int smmObj_getNodeCredit(int node_nr)
+int smmObj_getNodeCredit(int node_nr) // object의 credit울 return 
 {
     return smm_node[node_nr].credit;
 }
 
-int smmObj_getNodeEnergy(int node_nr)
+int smmObj_getNodeEnergy(int node_nr) // object의 energy를 return 
 {
     return smm_node[node_nr].energy;
 }
