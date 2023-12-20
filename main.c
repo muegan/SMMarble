@@ -138,7 +138,6 @@ void actionNode(int player)
     
     switch(type)
     {
-        //case lecture:
         case SMMNODE_TYPE_LECTURE:
              if 
             cur_player[player].accumCredit += smmObj_getNodeCredit( boardPtr );
@@ -149,6 +148,30 @@ void actionNode(int player)
             smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
             
             break;
+        
+        case SMMNODE_TYPE_RESTAURANT:
+        	
+        	break;
+        
+        case SMMNODE_TYPE_LABORATORY:
+        	
+        	break;
+        	
+        case SMMNODE_TYPE_HOME:
+        	
+        	break;
+        	
+        case SMMNODE_TYPE_GOTOLAB:
+        	
+        	break;
+        	
+        case SMMNODE_TYPE_FOODCHANCE:
+        	
+        	break;
+        
+        case SMMNODE_TYPE_FESTIVAL:
+        	
+        	break;
             
         default:
             break;
@@ -195,7 +218,7 @@ int main(int argc, const char * argv[]) {
     }
     
     printf("Reading board component......\n");
-    while () //read a node parameter set
+    while ((fscanf(fp, "%s %i %i %i", name, &type, &credit, &energy))==4) //read a node parameter set
     {
         //store the parameter set
         //(char* name, smmObjType_e objType, int type, int credit, int energy, smmObjGrade_e grade)
@@ -221,7 +244,7 @@ int main(int argc, const char * argv[]) {
     }
     //printf("(%s)", smmObj_getTypeName(SMMNODE_TYPE_LECTURE));
     
-    #if 0
+
     //2. food card config 
     if ((fp = fopen(FOODFILEPATH,"r")) == NULL)
     {
@@ -230,7 +253,7 @@ int main(int argc, const char * argv[]) {
     }
     
     printf("\n\nReading food card component......\n");
-    while () //read a food parameter set
+    while ((fscanf(fp, " %s %i", food, &energy))==2) //read a food parameter set
     {
         //store the parameter set
     }
@@ -247,13 +270,12 @@ int main(int argc, const char * argv[]) {
     }
     
     printf("\n\nReading festival card component......\n");
-    while () //read a festival card string
+    while ((fscanf(fp, "%s", festival))==1) //read a festival card string
     {
         //store the parameter set
     }
     fclose(fp);
     printf("Total number of festival cards : %i\n", festival_nr);
-    #endif
     
     
     //2. Player configuration ---------------------------------------------------------------------------------
