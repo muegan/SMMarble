@@ -25,12 +25,14 @@ static int player_nr; // static 변수로 게임 보드, 카드구성 등 설정을 저장
 
 
 
+
 typedef struct player {
 		int energy;
 		int position;
 		char name[MAX_CHARNAME];
 		int accumCredit;
 		int flag_graduate;
+		int flag_exp; // 실험 중 상태: 0
 } player_t; //구조체로 플레이어의 정보(에너지, 위치, 이름, 학점)을 저장 
 
 static player_t *cur_player;
@@ -112,6 +114,7 @@ void generatePlayers(int n, int initEnergy) // 새 플레이어를 생성
          cur_player[i].energy = initEnergy;
          cur_player[i].accumCredit = 0;
          cur_player[i].flag_graduate = 0;
+         cur_player[i].flag_exp = 0;
      }
 }
 
@@ -130,9 +133,9 @@ int rolldie(int player) // 주사위를 굴림
     return (rand()%MAX_DIE + 1); // 1 ~ MAX_DIE 중 랜덤한 값을 return
 }
 
+
 int randomGrade(void) // 랜덤한 성적을 return
 {
-	char* gradeListname[9] = {"A+", "A0", "A-", "B+", "B0", "B-", "C+", "C0", "C-"};
 	int gradeList[9] = {4.3, 4.0, 3.7, 3.3, 3.0, 2.7, 2.3, 2.0, 1.7};
 	
 	int randGrade = rand()%9;
@@ -151,7 +154,7 @@ void actionNode(int player)
     switch(type)
     {
         case SMMNODE_TYPE_LECTURE:
-        	
+        {		
         	// 이전에 듣지 않음
         	
 			// 충분한에너지(현재 에너지>강의에너지)
@@ -170,7 +173,8 @@ void actionNode(int player)
             smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
             
             break;
-        
+    	}
+    	
         case SMMNODE_TYPE_RESTAURANT:
         	// 플레이어 현재 에너지 += 보충 에너지
         	cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
@@ -179,21 +183,32 @@ void actionNode(int player)
         	break;
         
         case SMMNODE_TYPE_LABORATORY:
-        	#if 0
-        	if (cur_player[player].flag_graduate == 1)
-        	{
-        		
-			}
-			// 성공 -> 실험 종료, 실패 -> 실험 중 상태로 머무름
-			printf("Experiment result : %i, fail. %s needs more experiments...", ,
-			cur_player[player].name);
+        {
 			
-			printf("Experiment result : %i, success! %s can exit this lab!", ,
-			cur_player[player].name);
-        	
+        	if (cur_player[player].flag_exp==0)//실험 중 상태일 때
+        	{
+        		printf("Experiment time! (threshold: 4) ");
+        		int a = rolldie(player);
+        		
+        		if (a < 4) // 실험 실패 
+        		{
+        			printf("Experiment result : %i, fail. %s needs more experiments...", a, cur_player[player].name);
+        			cur_player[player].energy -= smmObj_getNodeEnergy(boardPtr);
+				}
+				else // 실험 성공 
+				{
+					printf("Experiment result : %i, success! %s can exit this lab!", a, cur_player[player].name);
+					cur_player[player].energy -= smmObj_getNodeEnergy(boardPtr);
+					cur_player[player].flag_exp=1;
+				}
+			}
+			else
+				printf("This is not experiment time.\n\n");
+			
         	break;
-        	#endif
         	
+    	}
+    	
         case SMMNODE_TYPE_HOME:
         	// 지나가는 순간 현재 에너지 += 보충 에너지
         	cur_player[player].energy += smmObj_getNodeEnergy(boardPtr);
@@ -203,6 +218,8 @@ void actionNode(int player)
         	
         case SMMNODE_TYPE_GOTOLAB:
         	//실험실로 이동(실험 중 상태로 전환)
+        	printf("This is experiment time! %s goes to the lab.\n\n", cur_player[player].name);
+        	cur_player[player].flag_exp=0;
         	
         	break;
         	
@@ -242,11 +259,11 @@ void actionNode(int player)
     }
 }
 
-void goForward(int player, int step) // 플레이어를 보드 위에서 이동(졸업 여부 체크) 
+void goForward(int player, int step) // 플레이어를 보드 위에서 이동
 {
     void *boardPtr;
-    cur_player[player].position += step;
-    boardPtr = smmdb_getData(LISTNO_NODE, cur_player[player].position );
+    cur_player[player].position += step; // 플레이어 위치 + 전진 수 
+    boardPtr = smmdb_getData(LISTNO_NODE, cur_player[player].position ); // 이동 완료 위치 노드 정보 저장 
      
     printf("%s go to node %i (name: %s)\n", 
                 cur_player[player].name, cur_player[player].position,
