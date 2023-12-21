@@ -60,9 +60,9 @@ int isGraduated(void) // 플레이어가 graduate 했는지 체크
 	for (i=0;i<player_nr;i++)// 플레이어 인원 수만큼 반복
 	{
 		if (cur_player[i].accumCredit >= GRADUATE_CREDIT)
-			return 1; // 졸업 O
+			cur_player[i].flag_graduate = 1; // 졸업 O
 	} 
-	return 0; // 졸업 X
+	return cur_player[i].flag_graduate = 0; // 졸업 X
 }
 
 
@@ -82,6 +82,7 @@ void printPlayerStatus(void) // 턴 시작마다, 모든 플레이어의 상태 출력
 {
 	int i;
 	
+	printf("===========PLAYER STATUS=============\n");
 	for (i=0;i<player_nr;i++)
      {
          printf("%s : credit %i, energy %i, position %i\n", 
@@ -90,6 +91,7 @@ void printPlayerStatus(void) // 턴 시작마다, 모든 플레이어의 상태 출력
                     cur_player[i].energy,
             		cur_player[i].position);
      }
+     printf("===========PLAYER STATUS=============\n\n");
 }
 
 void generatePlayers(int n, int initEnergy) // 새 플레이어를 생성 
@@ -128,6 +130,16 @@ int rolldie(int player) // 주사위를 굴림
     return (rand()%MAX_DIE + 1); // 1 ~ MAX_DIE 중 랜덤한 값을 return
 }
 
+int randomGrade(void) // 랜덤한 성적을 return
+{
+	char* gradeListname[9] = {"A+", "A0", "A-", "B+", "B0", "B-", "C+", "C0", "C-"};
+	int gradeList[9] = {4.3, 4.0, 3.7, 3.3, 3.0, 2.7, 2.3, 2.0, 1.7};
+	
+	int randGrade = rand()%9;
+	return gradeList[randGrade];
+ } 
+
+
 //action code when a player stays at a node
 void actionNode(int player)
 {
@@ -141,6 +153,7 @@ void actionNode(int player)
         case SMMNODE_TYPE_LECTURE:
         	
         	// 이전에 듣지 않음
+        	
 			// 충분한에너지(현재 에너지>강의에너지)
         	if(cur_player[player].energy >= smmObj_getNodeEnergy(boardPtr))
         	{
@@ -153,7 +166,7 @@ void actionNode(int player)
             cur_player[player].energy -= smmObj_getNodeEnergy( boardPtr );
             
             //grade generation
-            gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit( boardPtr ), 0, );
+            gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit( boardPtr ), 0, randomGrade());
             smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
             
             break;
@@ -166,7 +179,7 @@ void actionNode(int player)
         	break;
         
         case SMMNODE_TYPE_LABORATORY:
-        	//
+        	#if 0
         	if (cur_player[player].flag_graduate == 1)
         	{
         		
@@ -179,7 +192,7 @@ void actionNode(int player)
 			cur_player[player].name);
         	
         	break;
-        	
+        	#endif
         	
         case SMMNODE_TYPE_HOME:
         	// 지나가는 순간 현재 에너지 += 보충 에너지
